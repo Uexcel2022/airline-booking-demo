@@ -1,0 +1,15 @@
+
+spring:
+  datasource:
+    url: jdbc:mariadb://localhost:3306/airline_booking
+    username: root
+    password: jvman19
+  jpa:
+    hibernate:
+      ddl-auto: update
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        TYPE: TRACE
