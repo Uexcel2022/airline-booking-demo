@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface BookingService {
     ResponseEntity<List<BookingTrackerDto>> saveBookingTracker(BookingTrackerConverterDto bookingTrackerConverterDto);
+
+    BookingTrackerDto updateBooking(String id);
 }

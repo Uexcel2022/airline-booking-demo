@@ -8,7 +8,9 @@ import com.uexcel.airlinebookingreservation.repository.BookingTrackerRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -22,13 +24,13 @@ public class BookingServiceImp implements BookingService {
     @Override
     public ResponseEntity<List<BookingTrackerDto>> saveBookingTracker(BookingTrackerConverterDto bookingTrackerConverterDto) {
 
-        BookingTracker bookingTracker1 = getBookingTrackerDto1(bookingTrackerConverterDto);
+        BookingTracker bookingTracker1 = convertToEntityToTicket(bookingTrackerConverterDto);
 
         if(bookingTrackerConverterDto.getAircraftNumber2() != null && bookingTrackerConverterDto.getDate2() != null){
 
             validateBooking1(bookingTracker1,bookingTrackerConverterDto, bookingTrackerRepository);
 
-            BookingTracker bookingTracker2 = getBookingTrackerDto2(bookingTrackerConverterDto);
+            BookingTracker bookingTracker2 = convertToEntityReturnTicket(bookingTrackerConverterDto);
 
             validateBooking2(bookingTracker2,bookingTrackerConverterDto, bookingTrackerRepository);
 
@@ -42,8 +44,21 @@ public class BookingServiceImp implements BookingService {
         return ResponseEntity.ok().body(List.of(convertToDto(bookingTracker1, bookingTrackerRepository)));
     }
 
+    @Override
+    public BookingTrackerDto updateBooking(String id) {
 
-    private static BookingTracker getBookingTrackerDto1(BookingTrackerConverterDto bookingTrackerConverterDto) {
+        Optional<BookingTracker> bookingTracker =
+                bookingTrackerRepository.findById(id);
+        if(bookingTracker.isPresent()){
+            BookingTracker tr = bookingTracker.get();
+            tr.setStatus("used");
+          return convertToDto(tr,bookingTrackerRepository);
+        }
+        throw new RuntimeException("Booking not found");
+    }
+
+
+    private static BookingTracker convertToEntityToTicket(BookingTrackerConverterDto bookingTrackerConverterDto) {
 
         int year1 = bookingTrackerConverterDto.getDate1().getYear();
         int dayOfYear1 = bookingTrackerConverterDto.getDate1().getDayOfYear();
@@ -54,11 +69,12 @@ public class BookingServiceImp implements BookingService {
         bookingTracker.setDayOfYear(dayOfYear1);
         bookingTracker.setSeatNumber(bookingTrackerConverterDto.getSeatNumber1());
         bookingTracker.setYear(year1);
+        bookingTracker.setStatus("unused");
 
         return bookingTracker;
     }
 
-    private static BookingTracker getBookingTrackerDto2(BookingTrackerConverterDto bookingTrackerConverterDto) {
+    private static BookingTracker convertToEntityReturnTicket(BookingTrackerConverterDto bookingTrackerConverterDto) {
 
         int year2 = bookingTrackerConverterDto.getDate2().getYear();
         int dayOfYear2 = bookingTrackerConverterDto.getDate2().getDayOfYear();
@@ -68,6 +84,7 @@ public class BookingServiceImp implements BookingService {
         bookingTracker.setDayOfYear(dayOfYear2);
         bookingTracker.setSeatNumber(bookingTrackerConverterDto.getSeatNumber2());
         bookingTracker.setYear(year2);
+        bookingTracker.setStatus("unused");
 
         return bookingTracker;
 
@@ -79,8 +96,8 @@ public class BookingServiceImp implements BookingService {
         BookingTrackerDto bookingTrackerDto = new BookingTrackerDto();
         bookingTrackerDto.setAircraftNumber(bookingTracker.getAircraftNumber());
         bookingTrackerDto.setSeatNumber(bookingTracker.getSeatNumber());
-        bookingTrackerDto.setYear(bookingTracker.getYear());
-        bookingTrackerDto.setDayOfYear(bookingTracker.getDayOfYear());
+        bookingTrackerDto.setDate(
+                String.valueOf(LocalDate.ofYearDay(bookingTracker.getYear(),bookingTracker.getDayOfYear())));
         bookingTrackerDto.setDepartureTime(bookingTracker.getDepartureTime());
         bookingTrackerRepository.save(bookingTracker);
         bookingTrackerDto.setId(bookingTracker.getId());

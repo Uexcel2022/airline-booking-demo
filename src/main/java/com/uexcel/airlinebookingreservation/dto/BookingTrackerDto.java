@@ -12,6 +12,5 @@ public class BookingTrackerDto {
     private String aircraftNumber;
     private int seatNumber;
     private String departureTime;
-    private int year;
-    private int dayOfYear;
+    private String date;
 }

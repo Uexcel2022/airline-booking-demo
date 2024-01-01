@@ -20,4 +20,7 @@ public class BookingTracker {
     private int seatNumber;
     private String departureTime;
     private int year;
-    private int dayOfYear;}
+    private int dayOfYear;
+    private String status;
+
+}

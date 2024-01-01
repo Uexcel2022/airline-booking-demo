@@ -5,10 +5,7 @@ import com.uexcel.airlinebookingreservation.dto.BookingTrackerConverterDto;
 import com.uexcel.airlinebookingreservation.dto.BookingTrackerDto;
 import com.uexcel.airlinebookingreservation.service.BookingService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,5 +23,12 @@ public class BookingTrackerController {
     public ResponseEntity<List<BookingTrackerDto>> saveBooking(
             @RequestBody BookingTrackerConverterDto bookingTrackerConverterDto){
         return bookingService.saveBookingTracker(bookingTrackerConverterDto);
+    }
+
+    @PostMapping("/update-booking")
+    public ResponseEntity<BookingTrackerDto> update(@RequestBody() String id){
+
+      return ResponseEntity.ok().body(bookingService.updateBooking(id));
+
     }
 }
