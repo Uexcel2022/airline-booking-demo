@@ -4,6 +4,7 @@ package com.uexcel.airlinebookingreservation.controller;
 import com.uexcel.airlinebookingreservation.dto.BookingConverterDto;
 import com.uexcel.airlinebookingreservation.dto.BookingDto;
 import com.uexcel.airlinebookingreservation.dto.BookingUpdateDto;
+import com.uexcel.airlinebookingreservation.dto.SeatDto;
 import com.uexcel.airlinebookingreservation.service.BookingDisplayService;
 import com.uexcel.airlinebookingreservation.service.BookingService;
 import org.springframework.http.ResponseEntity;
@@ -45,12 +46,11 @@ public class BookingTrackerController {
     }
 
     @GetMapping("/booking")
-    public List<Integer> getAvailableSeat(
+    public List<SeatDto> getAvailableSeat(
             @RequestParam("aircraft") String aircraftNumber,
             @RequestParam("departure") String departureTime,
             @RequestParam("date") LocalDate date
             ){
-        System.out.println("**************" + aircraftNumber + " " + departureTime +" "+ date);
         return bookingDisplayService.findBooking(aircraftNumber, departureTime, date);
     }
 

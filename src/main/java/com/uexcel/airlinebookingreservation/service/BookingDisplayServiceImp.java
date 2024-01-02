@@ -1,5 +1,6 @@
 package com.uexcel.airlinebookingreservation.service;
 
+import com.uexcel.airlinebookingreservation.dto.SeatDto;
 import com.uexcel.airlinebookingreservation.entity.Seat;
 import com.uexcel.airlinebookingreservation.repository.BookingRepository;
 import com.uexcel.airlinebookingreservation.repository.BookingTrackerRepository;
@@ -27,9 +28,9 @@ public class BookingDisplayServiceImp implements  BookingDisplayService{
 
 
     @Override
-    public List<Integer> findBooking(String aircraftNumber, String departureTime, LocalDate date) {
+    public List<SeatDto> findBooking(String aircraftNumber, String departureTime, LocalDate date) {
 
-        ArrayList<Integer> availableSeats =  new ArrayList<>();
+        ArrayList<SeatDto> availableSeats =  new ArrayList<>();
         List<Integer> bookingTrackerList =
                 bookingTrackerRepository.booking(
                         aircraftNumber,date.getYear(),date.getDayOfYear(), departureTime);
@@ -38,13 +39,9 @@ public class BookingDisplayServiceImp implements  BookingDisplayService{
 
         for(Integer n : seatList){
             if(!bookingTrackerList.contains(n)){
-                availableSeats.add(n);
+                availableSeats.add(new SeatDto(n));
             }
         }
-
-
-
-
 
         return availableSeats;
     }
