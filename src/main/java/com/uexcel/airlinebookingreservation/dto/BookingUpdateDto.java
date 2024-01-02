@@ -5,17 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class BookingTrackerDto {
+@AllArgsConstructor
+public class BookingUpdateDto {
+    private String bookingId;
     private String firstName;
     private String lastName;
     private String nextOfKingNumber;
     private String address;
-    private String bookingId;
     private String aircraftNumber;
     private int seatNumber;
     private String departureTime;

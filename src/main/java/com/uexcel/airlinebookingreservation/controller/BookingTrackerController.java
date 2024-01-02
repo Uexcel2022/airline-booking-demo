@@ -3,11 +3,13 @@ package com.uexcel.airlinebookingreservation.controller;
 
 import com.uexcel.airlinebookingreservation.dto.BookingTrackerConverterDto;
 import com.uexcel.airlinebookingreservation.dto.BookingTrackerDto;
+import com.uexcel.airlinebookingreservation.dto.BookingUpdateDto;
 import com.uexcel.airlinebookingreservation.service.BookingService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -25,10 +27,15 @@ public class BookingTrackerController {
         return bookingService.saveBookingTracker(bookingTrackerConverterDto);
     }
 
-    @PostMapping("/update-booking")
-    public ResponseEntity<BookingTrackerDto> update(@RequestBody() String id){
+    @PutMapping("/update-status")
+    public ResponseEntity<BookingTrackerDto> updateBookingStatus(@RequestBody() Map<String, String> id){
+      return ResponseEntity.ok().body(bookingService.updateBookingStatus(id.get("id")));
 
-      return ResponseEntity.ok().body(bookingService.updateBooking(id));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<BookingTrackerDto> updateBooking(@RequestBody() BookingUpdateDto bookingUpdateDto){
+        return ResponseEntity.ok().body(bookingService.updateBooking(bookingUpdateDto));
 
     }
 }

@@ -12,10 +12,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface BookingTrackerRepository extends JpaRepository<BookingTracker, String> {
+public interface BookingTrackerRepository extends JpaRepository<BookingTracker, Long> {
 
-    List<BookingTracker> findBySeatNumber(int no);
-
+    BookingTracker findByBookingId(String id);
+    BookingTracker deleteByBookingId(String id);
     @Query(
             nativeQuery = true,
            value = "SELECT * From booking_tracker WHERE aircraft_number=:aircraftNumber AND seat_number =:seatNumber " +
@@ -29,19 +29,5 @@ public interface BookingTrackerRepository extends JpaRepository<BookingTracker, 
            @Param("departureTime") String departureTime
     );
 
-//    @Query(
-//            "SELECT * From booking_tracker WHERE aircraft_number=:aircraftNumber AND seat_number =:seatNumber " +
-//                    "AND to_year=:toYear AND to_day_of_year=:toDayOfYear AND fro_year=:froYear " +
-//                    "AND fro_day_of_year=:froDayOfYear AND departure_time=:departureTime"
-//    )
-//    Mono<BookingTracker> findByReturn(
-//            @Param("aircraftNumber") String aircraftNumber,
-//            @Param("seatNumber") int seatNumber,
-//            @Param("toYear") int toYear,
-//            @Param("toDayOfYear") int toDayOfYear,
-//            @Param("froYear") int froYear,
-//            @Param("froDayOfYear") int froDayOfYear,
-//            @Param("departureTime") String departureTime
-
-//    );
+    List<BookingTracker> findByAircraftNumber(String aircraftNumber1);
 }

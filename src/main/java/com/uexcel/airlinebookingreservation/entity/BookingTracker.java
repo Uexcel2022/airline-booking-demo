@@ -14,8 +14,9 @@ import java.util.UUID;
 @Table(name = "booking_tracker")
 public class BookingTracker {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id = UUID.randomUUID().toString();
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String bookingId;
     private String aircraftNumber;
     private int seatNumber;
     private String departureTime;
@@ -23,4 +24,13 @@ public class BookingTracker {
     private int dayOfYear;
     private String status;
 
+    public BookingTracker(String bookingId, String aircraftNumber, int seatNumber, String departureTime, int year, int dayOfYear, String status) {
+        this.bookingId = bookingId;
+        this.aircraftNumber = aircraftNumber;
+        this.seatNumber = seatNumber;
+        this.departureTime = departureTime;
+        this.year = year;
+        this.dayOfYear = dayOfYear;
+        this.status = status;
+    }
 }

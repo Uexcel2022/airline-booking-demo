@@ -1,21 +1,27 @@
-package com.uexcel.airlinebookingreservation.dto;
+package com.uexcel.airlinebookingreservation.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.UUID;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingTrackerDto {
+@Table(name="booking")
+public class Booking {
+    @Id
+    private String bookingId = UUID.randomUUID().toString();
     private String firstName;
     private String lastName;
     private String nextOfKingNumber;
     private String address;
-    private String bookingId;
     private String aircraftNumber;
     private int seatNumber;
     private String departureTime;
@@ -24,4 +30,5 @@ public class BookingTrackerDto {
     private String destination;
     private String arrivalTime;
     private String status;
+
 }
