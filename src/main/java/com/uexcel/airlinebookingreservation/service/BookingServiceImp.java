@@ -1,8 +1,8 @@
 package com.uexcel.airlinebookingreservation.service;
 
 
-import com.uexcel.airlinebookingreservation.dto.BookingTrackerConverterDto;
-import com.uexcel.airlinebookingreservation.dto.BookingTrackerDto;
+import com.uexcel.airlinebookingreservation.dto.BookingConverterDto;
+import com.uexcel.airlinebookingreservation.dto.BookingDto;
 import com.uexcel.airlinebookingreservation.dto.BookingUpdateDto;
 import com.uexcel.airlinebookingreservation.entity.Booking;
 import com.uexcel.airlinebookingreservation.entity.BookingTracker;
@@ -27,21 +27,21 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public ResponseEntity<List<BookingTrackerDto>> saveBookingTracker(BookingTrackerConverterDto bookingTrackerConverterDto) {
+    public ResponseEntity<List<BookingDto>> saveBookingTracker(BookingConverterDto bookingConverterDto) {
 
-        Booking booking1 = convertToBooking1(bookingTrackerConverterDto);
+        Booking booking1 = convertToBooking1(bookingConverterDto);
 
         BookingTracker bookingTracker1 = convertToBookingTracker1(booking1);
 
         List<BookingTracker> bookingTrackerList =
-                bookingTrackerRepository.findByAircraftNumber(bookingTrackerConverterDto.getAircraftNumber1());
+                bookingTrackerRepository.findByAircraftNumber(bookingConverterDto.getAircraftNumber1());
 
         deleteOldBookings(bookingTrackerList, bookingTrackerRepository);
 
-        if (bookingTrackerConverterDto.getAircraftNumber2() != null && bookingTrackerConverterDto.getDate2() != null) {
+        if (bookingConverterDto.getAircraftNumber2() != null && bookingConverterDto.getDate2() != null) {
 
             List<BookingTracker> bookingTrackerList2 =
-                    bookingTrackerRepository.findByAircraftNumber(bookingTrackerConverterDto.getAircraftNumber2());
+                    bookingTrackerRepository.findByAircraftNumber(bookingConverterDto.getAircraftNumber2());
 
             deleteOldBookings(bookingTrackerList2, bookingTrackerRepository);
 
@@ -49,11 +49,11 @@ public class BookingServiceImp implements BookingService {
             validateBooking1(bookingTracker1, booking1, bookingTrackerRepository);
 
 
-            Booking booking2 = convertToBooking2(bookingTrackerConverterDto);
+            Booking booking2 = convertToBooking2(bookingConverterDto);
 
             BookingTracker bookingTracker2 = convertToBookingTracker1(booking2);
 
-            validateBooking2(bookingTracker2, bookingTrackerConverterDto, bookingTrackerRepository);
+            validateBooking1(bookingTracker2, booking2, bookingTrackerRepository);
 
             bookingRepository.save(booking1);
             bookingRepository.save(booking2);
@@ -72,7 +72,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public BookingTrackerDto updateBookingStatus(String id) {
+    public BookingDto updateBookingStatus(String id) {
 
         Booking booking =
                 bookingRepository.findByBookingId(id);
@@ -98,7 +98,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public BookingTrackerDto updateBooking(BookingUpdateDto bookingUpdateDto) {
+    public BookingDto updateBooking(BookingUpdateDto bookingUpdateDto) {
 
         Booking booking =
                 bookingRepository.findByBookingId(bookingUpdateDto.getBookingId());
@@ -107,7 +107,7 @@ public class BookingServiceImp implements BookingService {
 
         if (booking != null && bookingTracker != null) {
 
-            if(bookingUpdateDto.getFirstName() != null){
+            if(bookingUpdateDto.getFirstName() != null ){
                 booking.setFirstName(bookingUpdateDto.getFirstName());
             }
 
@@ -247,16 +247,16 @@ public class BookingServiceImp implements BookingService {
     }
 
     private static BookingTracker convertToBookingTracker2(
-            BookingTrackerConverterDto bookingTrackerConverterDto, String bookingId) {
+            BookingConverterDto bookingConverterDto, String bookingId) {
 
-        int year2 = bookingTrackerConverterDto.getDate2().getYear();
-        int dayOfYear2 = bookingTrackerConverterDto.getDate2().getDayOfYear();
+        int year2 = bookingConverterDto.getDate2().getYear();
+        int dayOfYear2 = bookingConverterDto.getDate2().getDayOfYear();
         BookingTracker bookingTracker = new BookingTracker();
         bookingTracker.setBookingId(bookingId);
-        bookingTracker.setAircraftNumber(bookingTrackerConverterDto.getAircraftNumber2());
-        bookingTracker.setDepartureTime(bookingTrackerConverterDto.getDepartureTime2());
+        bookingTracker.setAircraftNumber(bookingConverterDto.getAircraftNumber2());
+        bookingTracker.setDepartureTime(bookingConverterDto.getDepartureTime2());
         bookingTracker.setDayOfYear(dayOfYear2);
-        bookingTracker.setSeatNumber(bookingTrackerConverterDto.getSeatNumber2());
+        bookingTracker.setSeatNumber(bookingConverterDto.getSeatNumber2());
         bookingTracker.setYear(year2);
         bookingTracker.setStatus("unused");
 
@@ -265,26 +265,26 @@ public class BookingServiceImp implements BookingService {
     }
 
 
-    public static  BookingTrackerDto convertToDto(Booking booking){
+    public static BookingDto convertToDto(Booking booking){
 
-        BookingTrackerDto bookingTrackerDto = new BookingTrackerDto();
-        bookingTrackerDto.setFirstName(booking.getFirstName());
-        bookingTrackerDto.setLastName(booking.getLastName());
-        bookingTrackerDto.setNextOfKingNumber(booking.getNextOfKingNumber());
-        bookingTrackerDto.setAddress(booking.getAddress());
-        bookingTrackerDto.setBookingId(booking.getBookingId());
-        bookingTrackerDto.setAircraftNumber(booking.getAircraftNumber());
-        bookingTrackerDto.setSeatNumber(booking.getSeatNumber());
-        bookingTrackerDto.setDate(booking.getDate());
-        bookingTrackerDto.setDepartureTime(booking.getDepartureTime());
-        bookingTrackerDto.setOrigin(booking.getOrigin());
-        bookingTrackerDto.setDestination(booking.getDestination());
-        bookingTrackerDto.setArrivalTime(booking.getArrivalTime());
-        bookingTrackerDto.setStatus(booking.getStatus());
-        bookingTrackerDto.setFirstName(booking.getFirstName());
+        BookingDto bookingDto = new BookingDto();
+        bookingDto.setFirstName(booking.getFirstName());
+        bookingDto.setLastName(booking.getLastName());
+        bookingDto.setNextOfKingNumber(booking.getNextOfKingNumber());
+        bookingDto.setAddress(booking.getAddress());
+        bookingDto.setBookingId(booking.getBookingId());
+        bookingDto.setAircraftNumber(booking.getAircraftNumber());
+        bookingDto.setSeatNumber(booking.getSeatNumber());
+        bookingDto.setDate(booking.getDate());
+        bookingDto.setDepartureTime(booking.getDepartureTime());
+        bookingDto.setOrigin(booking.getOrigin());
+        bookingDto.setDestination(booking.getDestination());
+        bookingDto.setArrivalTime(booking.getArrivalTime());
+        bookingDto.setStatus(booking.getStatus());
+        bookingDto.setFirstName(booking.getFirstName());
 
 
-        return  bookingTrackerDto;
+        return bookingDto;
     }
 
     public  static  void validateBooking1(
@@ -296,13 +296,13 @@ public class BookingServiceImp implements BookingService {
                     bookingTracker.getDepartureTime());
 
             if (newBooking != null) {
-                throw new RuntimeException("The seat on " + booking.getAircraftNumber()
-                        + " has been booked on this date " + booking.getDate());
+                throw new RuntimeException("The seat number " +booking.getSeatNumber()+ " on aircraft number " +
+                        booking.getAircraftNumber() + " has been booked on this date " + booking.getDate());
             }
     }
 
     public  static  void validateBooking2(
-            BookingTracker bookingTracker, BookingTrackerConverterDto bookingTrackerConverterDto,
+            BookingTracker bookingTracker, BookingConverterDto bookingConverterDto,
             BookingTrackerRepository bookingTrackerRepository) {
         BookingTracker booking = bookingTrackerRepository.findByGo(
                 bookingTracker.getAircraftNumber(), bookingTracker.getSeatNumber(),
@@ -310,8 +310,8 @@ public class BookingServiceImp implements BookingService {
                 bookingTracker.getDepartureTime());
 
         if (booking != null) {
-            throw new RuntimeException("The seat on " + bookingTrackerConverterDto.getAircraftNumber2()
-                    + " has been booked on this date " + bookingTrackerConverterDto.getDate2());
+            throw new RuntimeException("The seat on " + bookingConverterDto.getAircraftNumber2()
+                    + " has been booked on this date " + bookingConverterDto.getDate2());
         }
     }
 
@@ -328,38 +328,38 @@ public class BookingServiceImp implements BookingService {
     }
 
     public static Booking convertToBooking1(
-            BookingTrackerConverterDto bookingTrackerConverterDto){
+            BookingConverterDto bookingConverterDto){
 
         Booking booking = new Booking();
-        booking.setFirstName(bookingTrackerConverterDto.getFirstName());
-        booking.setLastName(bookingTrackerConverterDto.getLastName());
-        booking.setNextOfKingNumber(bookingTrackerConverterDto.getNextOfKingNumber());
-        booking.setAddress(bookingTrackerConverterDto.getAddress());
-        booking.setAircraftNumber(bookingTrackerConverterDto.getAircraftNumber1());
-        booking.setSeatNumber(bookingTrackerConverterDto.getSeatNumber1());
-        booking.setDepartureTime(bookingTrackerConverterDto.getDepartureTime1());
-        booking.setDate(bookingTrackerConverterDto.getDate1());
-        booking.setOrigin(bookingTrackerConverterDto.getFrom1());
-        booking.setDestination(bookingTrackerConverterDto.getDestination1());
-        booking.setArrivalTime(bookingTrackerConverterDto.getArrivalTime1());
+        booking.setFirstName(bookingConverterDto.getFirstName());
+        booking.setLastName(bookingConverterDto.getLastName());
+        booking.setNextOfKingNumber(bookingConverterDto.getNextOfKingNumber());
+        booking.setAddress(bookingConverterDto.getAddress());
+        booking.setAircraftNumber(bookingConverterDto.getAircraftNumber1());
+        booking.setSeatNumber(bookingConverterDto.getSeatNumber1());
+        booking.setDepartureTime(bookingConverterDto.getDepartureTime1());
+        booking.setDate(bookingConverterDto.getDate1());
+        booking.setOrigin(bookingConverterDto.getFrom1());
+        booking.setDestination(bookingConverterDto.getDestination1());
+        booking.setArrivalTime(bookingConverterDto.getArrivalTime1());
         booking.setStatus("unused");
         return booking;
     }
 
     public static Booking convertToBooking2(
-            BookingTrackerConverterDto bookingTrackerConverterDto){
+            BookingConverterDto bookingConverterDto){
 
         Booking booking = new Booking();
-        booking.setFirstName(bookingTrackerConverterDto.getFirstName());
-        booking.setLastName(bookingTrackerConverterDto.getLastName());
-        booking.setAddress(bookingTrackerConverterDto.getAddress());
-        booking.setAircraftNumber(bookingTrackerConverterDto.getAircraftNumber2());
-        booking.setSeatNumber(bookingTrackerConverterDto.getSeatNumber2());
-        booking.setDepartureTime(bookingTrackerConverterDto.getDepartureTime2());
-        booking.setDate(bookingTrackerConverterDto.getDate2());
-        booking.setOrigin(bookingTrackerConverterDto.getFrom2());
-        booking.setDestination(bookingTrackerConverterDto.getDestination2());
-        booking.setArrivalTime(bookingTrackerConverterDto.getArrivalTime2());
+        booking.setFirstName(bookingConverterDto.getFirstName());
+        booking.setLastName(bookingConverterDto.getLastName());
+        booking.setAddress(bookingConverterDto.getAddress());
+        booking.setAircraftNumber(bookingConverterDto.getAircraftNumber2());
+        booking.setSeatNumber(bookingConverterDto.getSeatNumber2());
+        booking.setDepartureTime(bookingConverterDto.getDepartureTime2());
+        booking.setDate(bookingConverterDto.getDate2());
+        booking.setOrigin(bookingConverterDto.getFrom2());
+        booking.setDestination(bookingConverterDto.getDestination2());
+        booking.setArrivalTime(bookingConverterDto.getArrivalTime2());
         booking.setStatus("unused");
         return booking;
     }

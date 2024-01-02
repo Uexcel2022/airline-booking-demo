@@ -5,12 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingTrackerDto {
+public class BookingDto {
     private String firstName;
     private String lastName;
     private String nextOfKingNumber;

@@ -1,19 +1,18 @@
 package com.uexcel.airlinebookingreservation.service;
 
 
-import com.uexcel.airlinebookingreservation.dto.BookingTrackerConverterDto;
-import com.uexcel.airlinebookingreservation.dto.BookingTrackerDto;
+import com.uexcel.airlinebookingreservation.dto.BookingConverterDto;
+import com.uexcel.airlinebookingreservation.dto.BookingDto;
 import com.uexcel.airlinebookingreservation.dto.BookingUpdateDto;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
-import java.util.Map;
 
 
 public interface BookingService {
-    ResponseEntity<List<BookingTrackerDto>> saveBookingTracker(BookingTrackerConverterDto bookingTrackerConverterDto);
+    ResponseEntity<List<BookingDto>> saveBookingTracker(BookingConverterDto bookingConverterDto);
 
-    BookingTrackerDto updateBookingStatus(String id);
+    BookingDto updateBookingStatus(String id);
 
-    BookingTrackerDto updateBooking(BookingUpdateDto bookingUpdateDto);
+    BookingDto updateBooking(BookingUpdateDto bookingUpdateDto);
 }

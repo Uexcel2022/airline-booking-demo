@@ -29,5 +29,17 @@ public interface BookingTrackerRepository extends JpaRepository<BookingTracker, 
            @Param("departureTime") String departureTime
     );
 
+
+    @Query(
+            "SELECT p.seatNumber From BookingTracker p WHERE p.aircraftNumber =:aircraft AND" +
+                    " p.year  =:yr AND p.dayOfYear =:doy AND p.departureTime =:departure"
+    )
+    List<Integer> booking(
+            @Param("aircraft") String aircraft,
+            @Param("yr") int yr,
+            @Param("doy") int doy,
+            @Param("departure") String departure
+    );
+
     List<BookingTracker> findByAircraftNumber(String aircraftNumber1);
 }
