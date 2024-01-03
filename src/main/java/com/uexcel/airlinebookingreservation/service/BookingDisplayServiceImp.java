@@ -1,9 +1,10 @@
 package com.uexcel.airlinebookingreservation.service;
 
-import com.uexcel.airlinebookingreservation.dto.SeatDto;
-import com.uexcel.airlinebookingreservation.entity.Seat;
-import com.uexcel.airlinebookingreservation.repository.BookingRepository;
+import com.uexcel.airlinebookingreservation.dto.AvailableSeats;
+import com.uexcel.airlinebookingreservation.dto.FlightScheduleDto;
+import com.uexcel.airlinebookingreservation.entity.FlightSchedule;
 import com.uexcel.airlinebookingreservation.repository.BookingTrackerRepository;
+import com.uexcel.airlinebookingreservation.repository.FlightScheduleRepository;
 import com.uexcel.airlinebookingreservation.repository.SeatRepository;
 import org.springframework.stereotype.Service;
 
@@ -13,24 +14,25 @@ import java.util.List;
 
 @Service
 public class BookingDisplayServiceImp implements  BookingDisplayService{
-   private final BookingRepository bookingRepository;
+    private final FlightScheduleRepository flightScheduleRepository;
    private final BookingTrackerRepository bookingTrackerRepository;
 
    private  final SeatRepository seatRepository;
 
-    public BookingDisplayServiceImp(BookingRepository bookingRepository,
-                                    BookingTrackerRepository bookingTrackerRepository,
-                                    SeatRepository seatRepository) {
-        this.bookingRepository = bookingRepository;
+    public BookingDisplayServiceImp(
+            FlightScheduleRepository flightScheduleRepository,
+            BookingTrackerRepository bookingTrackerRepository,
+            SeatRepository seatRepository) {
+        this.flightScheduleRepository = flightScheduleRepository;
         this.bookingTrackerRepository = bookingTrackerRepository;
         this.seatRepository = seatRepository;
     }
 
 
     @Override
-    public List<SeatDto> findBooking(String aircraftNumber, String departureTime, LocalDate date) {
+    public List<AvailableSeats> findBooking(String aircraftNumber, String departureTime, LocalDate date) {
 
-        ArrayList<SeatDto> availableSeats =  new ArrayList<>();
+        ArrayList<AvailableSeats> availableSeats =  new ArrayList<>();
         List<Integer> bookingTrackerList =
                 bookingTrackerRepository.booking(
                         aircraftNumber,date.getYear(),date.getDayOfYear(), departureTime);
@@ -38,11 +40,45 @@ public class BookingDisplayServiceImp implements  BookingDisplayService{
         List<Integer> seatList = seatRepository.AD473N6();
 
         for(Integer n : seatList){
-            if(!bookingTrackerList.contains(n)){
-                availableSeats.add(new SeatDto(n));
+            if(n!=null && !bookingTrackerList.contains(n)){
+                availableSeats.add(new AvailableSeats(n));
             }
         }
 
         return availableSeats;
+    }
+
+    @Override
+    public List<FlightScheduleDto> getFlightSchedule(LocalDate date) {
+        if(date.getYear() < LocalDate.now().getYear()){
+            throw new RuntimeException("Past date is invalid");
+        }
+
+        if(date.getYear() == LocalDate.now().getYear() && date.getDayOfYear() < LocalDate.now().getDayOfYear()){
+            throw new RuntimeException("Past date is invalid");
+        }
+        List<FlightScheduleDto> flightScheduleDtoArrayList = new ArrayList<>();
+
+        List<FlightSchedule>  flightSchedules = flightScheduleRepository.findByWeekDay(date.getDayOfWeek().name());
+
+            for(FlightSchedule n : flightSchedules) {
+                FlightScheduleDto flightScheduleDto = new FlightScheduleDto();
+                flightScheduleDto.setId(n.getId());
+                flightScheduleDto.setAircraftNumber(n.getAircraftNumber());
+                flightScheduleDto.setDate(date);
+                flightScheduleDto.setOrigin(n.getOrigin());
+                flightScheduleDto.setDepartureTime(n.getDepartureTime());
+                flightScheduleDto.setDestination(n.getDestination());
+                flightScheduleDto.setArrivalTime(n.getArrivalTime());
+                flightScheduleDto.setWeekDay(n.getWeekDay());
+                flightScheduleDto.setPrice(n.getPrice());
+                if(date.getDayOfYear() - LocalDate.now().getDayOfYear() >= 21){
+                 double discountedPrice =  n.getPrice() -  n.getPrice() * 15/100;
+                 flightScheduleDto.setPrice(discountedPrice);
+                }
+                flightScheduleDtoArrayList.add(flightScheduleDto);
+            }
+
+        return flightScheduleDtoArrayList;
     }
 }

@@ -7,6 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SeatDto {
+public class AvailableSeats {
     private Integer seatNumber;
 }
