@@ -3,12 +3,10 @@ package com.uexcel.airlinebookingreservation.service;
 
 import com.uexcel.airlinebookingreservation.dto.BookingConverterDto;
 import com.uexcel.airlinebookingreservation.dto.BookingDto;
-import com.uexcel.airlinebookingreservation.dto.BookingUpdateDto;
 import com.uexcel.airlinebookingreservation.entity.Booking;
 import com.uexcel.airlinebookingreservation.entity.BookingTracker;
 import com.uexcel.airlinebookingreservation.repository.BookingRepository;
 import com.uexcel.airlinebookingreservation.repository.BookingTrackerRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,7 +25,7 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public ResponseEntity<List<BookingDto>> saveBooking(BookingConverterDto bookingConverterDto) {
+    public List<BookingDto> saveBooking(BookingConverterDto bookingConverterDto) {
 
         dateValidation(bookingConverterDto.getDate1().getYear(), bookingConverterDto.getDate1().getDayOfYear());
 
@@ -64,14 +62,14 @@ public class BookingServiceImp implements BookingService {
             bookingTrackerRepository.save(bookingTracker1);
             bookingTrackerRepository.save(bookingTracker2);
 
-            return ResponseEntity.ok().body(List.of(convertToDto(booking1),
-                    convertToDto(booking2)));
+            return List.of(convertToDto(booking1),
+                    convertToDto(booking2));
         }
 
         validateBooking1(bookingTracker1, booking1, bookingTrackerRepository);
          bookingRepository.save(booking1);
          bookingTrackerRepository.save(bookingTracker1);
-        return ResponseEntity.ok().body(List.of(convertToDto(booking1)));
+        return List.of(convertToDto(booking1));
 
     }
 
@@ -102,67 +100,71 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public BookingDto updateBooking(BookingUpdateDto bookingUpdateDto) {
+    public BookingDto updateBooking(BookingDto bookingDto) {
 
         Booking booking =
-                bookingRepository.findByBookingId(bookingUpdateDto.getBookingId());
+                bookingRepository.findByBookingId(bookingDto.getBookingId());
         BookingTracker bookingTracker =
-                bookingTrackerRepository.findByBookingId(bookingUpdateDto.getBookingId());
+                bookingTrackerRepository.findByBookingId(bookingDto.getBookingId());
 
         if (booking != null && bookingTracker != null) {
 
-            if(bookingUpdateDto.getFirstName() != null ){
-                booking.setFirstName(bookingUpdateDto.getFirstName());
+            if(bookingDto.getFirstName() != null ){
+                booking.setFirstName(bookingDto.getFirstName());
             }
 
-            if(bookingUpdateDto.getLastName() != null){
-                booking.setLastName(bookingUpdateDto.getLastName());
+            if(bookingDto.getLastName() != null){
+                booking.setLastName(bookingDto.getLastName());
             }
 
-            if(bookingUpdateDto.getNextOfKingNumber() != null){
-                booking.setNextOfKingNumber(bookingUpdateDto.getNextOfKingNumber());
+            if(bookingDto.getNextOfKingNumber() != null){
+                booking.setNextOfKingNumber(bookingDto.getNextOfKingNumber());
             }
 
-            if(bookingUpdateDto.getAddress() != null){
-                booking.setAddress(bookingUpdateDto.getAddress());
+            if(bookingDto.getAddress() != null){
+                booking.setAddress(bookingDto.getAddress());
             }
 
-            if (bookingUpdateDto.getStatus() != null) {
-                booking.setStatus(bookingUpdateDto.getStatus());
-                bookingTracker.setStatus(bookingUpdateDto.getStatus());
+            if (bookingDto.getStatus() != null) {
+                booking.setStatus(bookingDto.getStatus());
+                bookingTracker.setStatus(bookingDto.getStatus());
             }
 
-            if(bookingUpdateDto.getSeatNumber() > 0){
-                booking.setSeatNumber(bookingUpdateDto.getSeatNumber());
-                bookingTracker.setSeatNumber(bookingUpdateDto.getSeatNumber());
+            if(bookingDto.getSeatNumber() > 0){
+                booking.setSeatNumber(bookingDto.getSeatNumber());
+                bookingTracker.setSeatNumber(bookingDto.getSeatNumber());
             }
 
-            if (bookingUpdateDto.getAircraftNumber() != null) {
-                booking.setAircraftNumber(bookingUpdateDto.getAircraftNumber());
-                bookingTracker.setAircraftNumber(bookingUpdateDto.getAircraftNumber());
+            if (bookingDto.getAircraftNumber() != null) {
+                booking.setAircraftNumber(bookingDto.getAircraftNumber());
+                bookingTracker.setAircraftNumber(bookingDto.getAircraftNumber());
             }
 
-            if(bookingUpdateDto.getDepartureTime() != null){
-                booking.setDepartureTime(bookingUpdateDto.getDepartureTime());
-                bookingTracker.setDepartureTime(bookingUpdateDto.getDepartureTime());
+            if(bookingDto.getDepartureTime() != null){
+                booking.setDepartureTime(bookingDto.getDepartureTime());
+                bookingTracker.setDepartureTime(bookingDto.getDepartureTime());
             }
 
-            if(bookingUpdateDto.getOrigin()!= null){
-                booking.setOrigin(bookingUpdateDto.getOrigin());
+            if(bookingDto.getOrigin()!= null){
+                booking.setOrigin(bookingDto.getOrigin());
             }
 
-            if(bookingUpdateDto.getDate()!= null){
-                booking.setDate(bookingUpdateDto.getDate());
-                bookingTracker.setYear(bookingUpdateDto.getDate().getYear());
-                bookingTracker.setDayOfYear(bookingUpdateDto.getDate().getDayOfYear());
+            if(bookingDto.getDate()!= null){
+                booking.setDate(bookingDto.getDate());
+                bookingTracker.setYear(bookingDto.getDate().getYear());
+                bookingTracker.setDayOfYear(bookingDto.getDate().getDayOfYear());
             }
 
-            if(bookingUpdateDto.getArrivalTime()!= null){
-                booking.setArrivalTime(bookingUpdateDto.getArrivalTime());
+            if(bookingDto.getArrivalTime()!= null){
+                booking.setArrivalTime(bookingDto.getArrivalTime());
             }
 
-            if(bookingUpdateDto.getDestination() != null){
-                booking.setDestination(bookingUpdateDto.getDestination());
+            if(bookingDto.getDestination() != null){
+                booking.setDestination(bookingDto.getDestination());
+            }
+
+            if(bookingDto.getEmail() != null){
+                booking.setEmail(bookingDto.getEmail());
             }
 
             bookingRepository.save(booking);
@@ -171,53 +173,57 @@ public class BookingServiceImp implements BookingService {
 
         } else  if(booking != null){
 
-            if(bookingUpdateDto.getFirstName() != null){
+            if(bookingDto.getFirstName() != null){
 
-                booking.setFirstName(bookingUpdateDto.getFirstName());
+                booking.setFirstName(bookingDto.getFirstName());
             }
 
-            if(bookingUpdateDto.getLastName() != null){
+            if(bookingDto.getLastName() != null){
                 booking.setLastName(booking.getLastName());
             }
 
-            if(bookingUpdateDto.getNextOfKingNumber() != null){
-                booking.setNextOfKingNumber(bookingUpdateDto.getNextOfKingNumber());
+            if(bookingDto.getNextOfKingNumber() != null){
+                booking.setNextOfKingNumber(bookingDto.getNextOfKingNumber());
             }
 
-            if(bookingUpdateDto.getAddress() != null){
-                booking.setAddress(bookingUpdateDto.getAddress());
+            if(bookingDto.getAddress() != null){
+                booking.setAddress(bookingDto.getAddress());
             }
 
-            if (bookingUpdateDto.getStatus() != null) {
-                booking.setStatus(bookingUpdateDto.getStatus());
+            if (bookingDto.getStatus() != null) {
+                booking.setStatus(bookingDto.getStatus());
             }
 
-            if(bookingUpdateDto.getSeatNumber() > 0){
-                booking.setSeatNumber(bookingUpdateDto.getSeatNumber());
+            if(bookingDto.getSeatNumber() > 0){
+                booking.setSeatNumber(bookingDto.getSeatNumber());
             }
 
-            if (bookingUpdateDto.getAircraftNumber() != null) {
-                booking.setAircraftNumber(bookingUpdateDto.getAircraftNumber());
+            if (bookingDto.getAircraftNumber() != null) {
+                booking.setAircraftNumber(bookingDto.getAircraftNumber());
             }
 
-            if(bookingUpdateDto.getDepartureTime() != null){
-                booking.setDepartureTime(bookingUpdateDto.getDepartureTime());
+            if(bookingDto.getDepartureTime() != null){
+                booking.setDepartureTime(bookingDto.getDepartureTime());
             }
 
-            if(bookingUpdateDto.getOrigin()!= null){
-                booking.setOrigin(bookingUpdateDto.getOrigin());
+            if(bookingDto.getOrigin()!= null){
+                booking.setOrigin(bookingDto.getOrigin());
             }
 
-            if(bookingUpdateDto.getDate()!= null){
-                booking.setDate(bookingUpdateDto.getDate());
+            if(bookingDto.getDate()!= null){
+                booking.setDate(bookingDto.getDate());
             }
 
-            if(bookingUpdateDto.getArrivalTime()!= null){
-                booking.setArrivalTime(bookingUpdateDto.getArrivalTime());
+            if(bookingDto.getArrivalTime()!= null){
+                booking.setArrivalTime(bookingDto.getArrivalTime());
             }
 
-            if(bookingUpdateDto.getDestination() != null){
-                booking.setDestination(bookingUpdateDto.getDestination());
+            if(bookingDto.getDestination() != null){
+                booking.setDestination(bookingDto.getDestination());
+            }
+
+            if(bookingDto.getEmail() != null){
+                booking.setEmail(bookingDto.getEmail());
             }
 
             BookingTracker bookingTracker1 = convertToBookingTracker1(booking);
@@ -289,6 +295,8 @@ public class BookingServiceImp implements BookingService {
         bookingDto.setDestination(booking.getDestination());
         bookingDto.setArrivalTime(booking.getArrivalTime());
         bookingDto.setStatus(booking.getStatus());
+        bookingDto.setPrice(booking.getPrice());
+        bookingDto.setEmail(booking.getEmail());
 
         return bookingDto;
     }
@@ -348,6 +356,8 @@ public class BookingServiceImp implements BookingService {
         booking.setOrigin(bookingConverterDto.getFrom1());
         booking.setDestination(bookingConverterDto.getDestination1());
         booking.setArrivalTime(bookingConverterDto.getArrivalTime1());
+        booking.setPrice(bookingConverterDto.getPrice());
+        booking.setEmail(bookingConverterDto.getEmail());
         booking.setStatus("unused");
         return booking;
     }

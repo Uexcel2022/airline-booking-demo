@@ -29,6 +29,8 @@ public class Booking {
     private String origin;
     private String destination;
     private String arrivalTime;
+    private Double price;
+    private String email;
     private String status;
 
 }

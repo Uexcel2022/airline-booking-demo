@@ -19,8 +19,11 @@ public class BookingDto {
     private int seatNumber;
     private String departureTime;
     private LocalDate date;
+    private String weekDay;
     private String origin;
     private String destination;
     private String arrivalTime;
+    private Double price;
+    private String email;
     private String status;
 }

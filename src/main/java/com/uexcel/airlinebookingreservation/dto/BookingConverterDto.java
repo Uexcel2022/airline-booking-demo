@@ -21,6 +21,8 @@ public class BookingConverterDto {
     private String from1;
     private String destination1;
     private String arrivalTime1;
+    private Double price;
+    private String email;
     private String aircraftNumber2;
     private int seatNumber2;
     private String departureTime2;

@@ -23,5 +23,7 @@ public class BookingUpdateDto {
     private String origin;
     private String destination;
     private String arrivalTime;
+    private Double price;
+    private String email;
     private String status;
 }

@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <title>available_flights</title>
+  <title>flight form</title>
   <style>
     .error{
       display: block;
@@ -37,6 +37,11 @@
       padding: 5px;
     }
 
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #1e2123;
+    }
+
     /*.first{*/
     /*    display: flex;*/
     /*    flex-flow: row;*/
@@ -48,8 +53,27 @@
     /*}*/
     .form{
         background: whitesmoke;
-        padding: 5px;
+        padding: 24px;
         margin-top: 30px;
+        border-radius: 5px;
+    }
+
+    .b{
+        text-align: center;
+        color: #125e8f;
+    }
+
+    button {
+        background-color: #125e8f;
+        color: #fff;
+        padding: 5px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #0e2433;
     }
   </style>
 </head>
@@ -58,37 +82,38 @@
 
 <div class="f" >
 
-  <form class="form">
+  <form class="form" method="post" role="form" th:action="@{/booking/book}" th:object="${dto}">
       <fieldset>
-          <h2 style="text-align: center">Seat Number</h2>
-     <div class="in" >
+          <h2 class="b"> Seat Number</h2>
+     <div class="in">
 
       <p th:each="seat:${seats}">
              <label class="l" for="rd">[[${seat.seatNumber}]]</label>
-             <input class="l" type="radio" id="rd" name="seat_no" th:value="${seat.seatNumber}">
+             <input th:field="${dto.seatNumber1}" class="l" type="radio" id="rd" name="seat_no" th:value="${seat.seatNumber}">
        </p>
+
       </div>
 
-
-      <div  th:each="flt:${flights}">
-          <p>Aircraft number: [[${flt.aircraftNumber}]] </p>
-          <p>Origin:  [[${flt.origin}]]</p>
-          <p>Destination: [[${flt.destination}]]</p>
-          <p>Departure time: [[${flt.departureTime}]]</p>
-          <p>Price: [[${flt.price}]]</p>
+      <div>
+          <p>Aircraft number: [[${flights.aircraftNumber}]] </p>
+          <p>Origin:  [[${flights.origin}]]</p>
+          <p>Destination: [[${flights.destination}]]</p>
+          <p>Departure time: [[${flights.departureTime}]]</p>
+          <p>Price: [[${flights.price}]]</p>
       </div>
-          <label>First name</label>
-          <p><input size="50px"></p>
-          <label>Last name </label>
-          <p><input size="50px"></p>
-          <label>Next of king Number</label>
-          <p><input size="50px"></p>
-          <label>Email</label>
-          <p><input size="50px"></p>
-          <label>Address</label>
-          <p><input size="50px"></p>
 
-    <input type="button" value="Submit">
+          <label for="firstName">First name</label>
+          <p><input th:field="${dto.firstName}" size="50px" id="firstName" name="firstName"></p>
+          <label for="lastName">Last name </label>
+          <p><input th:field="${dto.lastName}" size="50px" id="lastName" name="lastName"></p>
+          <label for="NOF">Next of king Number</label>
+          <p><input th:field="${dto.nextOfKingNumber}" size="50px" id="NOF" name="nok" ></p>
+          <label for="email">Email</label>
+          <p><input size="50px" type="email" id="email" name="email"></p>
+          <label for="address">Address</label>
+          <p><input th:field="${dto.address}"  size="50px" id="address" name="address"></p>
+
+       <button type="submit">Submit</button>
       </fieldset>
 </form>
 </div>
