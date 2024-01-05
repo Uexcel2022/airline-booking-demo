@@ -27,7 +27,13 @@ public class BookingServiceImp implements BookingService {
     }
 
     @Override
-    public ResponseEntity<List<BookingDto>> saveBookingTracker(BookingConverterDto bookingConverterDto) {
+    public ResponseEntity<List<BookingDto>> saveBooking(BookingConverterDto bookingConverterDto) {
+
+        dateValidation(bookingConverterDto.getDate1().getYear(), bookingConverterDto.getDate1().getDayOfYear());
+
+        if(bookingConverterDto.getAircraftNumber2() != null) {
+            dateValidation(bookingConverterDto.getDate2().getYear(), bookingConverterDto.getDate2().getDayOfYear());
+        }
 
         Booking booking1 = convertToBooking1(bookingConverterDto);
 
@@ -45,9 +51,7 @@ public class BookingServiceImp implements BookingService {
 
             deleteOldBookings(bookingTrackerList2, bookingTrackerRepository);
 
-
             validateBooking1(bookingTracker1, booking1, bookingTrackerRepository);
-
 
             Booking booking2 = convertToBooking2(bookingConverterDto);
 
@@ -64,11 +68,11 @@ public class BookingServiceImp implements BookingService {
                     convertToDto(booking2)));
         }
 
-
         validateBooking1(bookingTracker1, booking1, bookingTrackerRepository);
          bookingRepository.save(booking1);
          bookingTrackerRepository.save(bookingTracker1);
         return ResponseEntity.ok().body(List.of(convertToDto(booking1)));
+
     }
 
     @Override
@@ -112,7 +116,7 @@ public class BookingServiceImp implements BookingService {
             }
 
             if(bookingUpdateDto.getLastName() != null){
-                booking.setLastName(booking.getLastName());
+                booking.setLastName(bookingUpdateDto.getLastName());
             }
 
             if(bookingUpdateDto.getNextOfKingNumber() != null){
@@ -227,6 +231,10 @@ public class BookingServiceImp implements BookingService {
         throw new RuntimeException("Booking not found");
     }
 
+    @Override
+    public BookingDto checkBooking(String id) {
+        return convertToDto(bookingRepository.findByBookingId(id));
+    }
 
 
     private static BookingTracker convertToBookingTracker1(Booking booking) {
@@ -281,8 +289,6 @@ public class BookingServiceImp implements BookingService {
         bookingDto.setDestination(booking.getDestination());
         bookingDto.setArrivalTime(booking.getArrivalTime());
         bookingDto.setStatus(booking.getStatus());
-        bookingDto.setFirstName(booking.getFirstName());
-
 
         return bookingDto;
     }
@@ -294,11 +300,11 @@ public class BookingServiceImp implements BookingService {
                     bookingTracker.getAircraftNumber(), bookingTracker.getSeatNumber(),
                     bookingTracker.getYear(), bookingTracker.getDayOfYear(),
                     bookingTracker.getDepartureTime());
-
             if (newBooking != null) {
                 throw new RuntimeException("The seat number " +booking.getSeatNumber()+ " on aircraft number " +
                         booking.getAircraftNumber() + " has been booked on this date " + booking.getDate());
             }
+
     }
 
     public  static  void validateBooking2(
@@ -362,5 +368,17 @@ public class BookingServiceImp implements BookingService {
         booking.setArrivalTime(bookingConverterDto.getArrivalTime2());
         booking.setStatus("unused");
         return booking;
+    }
+
+    private  void dateValidation(int year,  int dayOfYear){
+
+        if(year < LocalDate.now().getYear()){
+            throw new RuntimeException("Invalid booking date");
+        }
+
+        if(year == LocalDate.now().getYear() && dayOfYear < LocalDate.now().getDayOfYear()){
+            throw new RuntimeException("Invalid booking date");
+        }
+
     }
 }

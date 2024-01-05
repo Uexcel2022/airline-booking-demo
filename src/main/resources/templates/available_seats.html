@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <title>available_flights</title>
+  <style>
+    .error{
+      display: block;
+      /*background: #e74c3c;*/
+      color: red;
+      font-weight: bold;
+    }
+    .admin{
+      text-align: center;
+    }
+    .in{
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      justify-items: center;
+      padding: 4px;
+      flex-flow: wrap;
+      width: 400px;
+    }
+
+    .f{
+      display: flex;
+      justify-content: center;
+    }
+
+    .l{
+      padding: 5px;
+    }
+
+    /*.first{*/
+    /*    display: flex;*/
+    /*    flex-flow: row;*/
+    /*    background: azure;*/
+    /*    justify-items: center;*/
+    /*    justify-content: center;*/
+    /*    width: 500px;*/
+
+    /*}*/
+    .form{
+        background: whitesmoke;
+        padding: 5px;
+        margin-top: 30px;
+    }
+  </style>
+</head>
+<body style="background: grey">
+<div class="first">
+
+<div class="f" >
+
+  <form class="form">
+      <fieldset>
+          <h2 style="text-align: center">Seat Number</h2>
+     <div class="in" >
+
+      <p th:each="seat:${seats}">
+             <label class="l" for="rd">[[${seat.seatNumber}]]</label>
+             <input class="l" type="radio" id="rd" name="seat_no" th:value="${seat.seatNumber}">
+       </p>
+      </div>
+
+
+      <div  th:each="flt:${flights}">
+          <p>Aircraft number: [[${flt.aircraftNumber}]] </p>
+          <p>Origin:  [[${flt.origin}]]</p>
+          <p>Destination: [[${flt.destination}]]</p>
+          <p>Departure time: [[${flt.departureTime}]]</p>
+          <p>Price: [[${flt.price}]]</p>
+      </div>
+          <label>First name</label>
+          <p><input size="50px"></p>
+          <label>Last name </label>
+          <p><input size="50px"></p>
+          <label>Next of king Number</label>
+          <p><input size="50px"></p>
+          <label>Email</label>
+          <p><input size="50px"></p>
+          <label>Address</label>
+          <p><input size="50px"></p>
+
+    <input type="button" value="Submit">
+      </fieldset>
+</form>
+</div>
+</div>
+
+<!--        <td th:text="${flt.date}"></td>-->
+<!--        <td th:text="${flt.weekDay}"></td>-->
+<!--        <td th:text="${flt.origin}"></td>-->
+<!--        <td th:text="${flt.destination}"></td>-->
+<!--        <td th:text="${flt.departureTime}"></td>-->
+<!--        <td th:text="${flt.arrivalTime}"></td>-->
+<!--        <td th:text="${flt.price}"></td>-->
+<!--        <td>-->
+
+          <!--                    <a th:href="@{/calendar(room_no=${rooms.roomNumber})}"-->
+          <!--                       class="btn btn-primary">Room Calendar</a>-->
+
+<!--          <a th:href="@{/booking/book(flight_id=${flt.id})}"-->
+<!--             class="btn btn-primary">Book</a>-->
+
+          <!--                    <a th:if="${admin != null}" th:href="@{/book_checkin(room_no=${rooms.roomNumber})}"-->
+          <!--                       class="btn btn-primary">Book-checkin</a>-->
+
+          <!--                    <a th:if="${admin != null}" th:href="@{/check_out(room_no=${rooms.roomNumber})}"-->
+          <!--                       class="btn btn-danger">Checkout</a>-->
+</body>
+</html>

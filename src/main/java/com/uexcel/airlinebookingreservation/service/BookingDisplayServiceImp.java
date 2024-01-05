@@ -37,8 +37,17 @@ public class BookingDisplayServiceImp implements  BookingDisplayService{
                 bookingTrackerRepository.booking(
                         aircraftNumber,date.getYear(),date.getDayOfYear(), departureTime);
 
-        List<Integer> seatList = seatRepository.AD473N6();
+        List<Integer> seatList = null;
 
+        if(aircraftNumber.equals("AD473N6")) {
+            seatList = seatRepository.AD473N6();
+        }
+
+        if(aircraftNumber.equals("DC407N1")) {
+            seatList = seatRepository.DC407N1();
+        }
+
+        assert seatList != null;
         for(Integer n : seatList){
             if(n!=null && !bookingTrackerList.contains(n)){
                 availableSeats.add(new AvailableSeats(n));

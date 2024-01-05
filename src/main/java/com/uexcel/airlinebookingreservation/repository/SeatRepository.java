@@ -9,6 +9,11 @@ import java.util.List;
 
 @Repository
 public interface SeatRepository extends JpaRepository<Seat,Long> {
-    @Query( nativeQuery = true, value = "SELECT AD473N6 FROM seat")
+    @Query( "SELECT p.AD473N6 FROM Seat p")
     List <Integer> AD473N6();
+
+
+    @Query("SELECT p.DC407N1 FROM Seat p")
+    List <Integer> DC407N1();
+
 }

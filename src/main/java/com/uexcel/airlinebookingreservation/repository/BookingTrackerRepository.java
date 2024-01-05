@@ -17,9 +17,8 @@ public interface BookingTrackerRepository extends JpaRepository<BookingTracker, 
     BookingTracker findByBookingId(String id);
     BookingTracker deleteByBookingId(String id);
     @Query(
-            nativeQuery = true,
-           value = "SELECT * From booking_tracker WHERE aircraft_number=:aircraftNumber AND seat_number =:seatNumber " +
-                    "AND year=:year AND day_of_year=:dayOfYear AND departure_time=:departureTime"
+            "SELECT p From BookingTracker p WHERE p.aircraftNumber =:aircraftNumber AND p.seatNumber =:seatNumber " +
+                    "AND p.year=:year AND p.dayOfYear=:dayOfYear AND p.departureTime=:departureTime"
     )
     BookingTracker findByGo(
            @Param("aircraftNumber") String aircraftNumber,
