@@ -82,14 +82,14 @@
 
     <div class="f" >
 
-        <form class="form" method="post" role="form" th:action="@{/booking/save-update}" th:object="${receipt}">
+        <form class="form" method="Post" role="form" th:action="@{/booking/save-update}" th:object="${receipt}">
             <fieldset>
                 <h2 class="b"> Seat Number</h2>
                 <div class="in">
 
                     <p th:each="seat:${seats}">
                         <label class="l" for="rd">[[${seat.seatNumber}]]</label>
-                        <input th:field="${dto.seatNumber1}" class="l" type="radio" id="rd" name="seat_no" th:value="${seat.seatNumber}">
+                        <input th:field="${receipt.seatNumber}" class="l" type="radio" id="rd" name="seat_no" th:value="${seat.seatNumber}">
                     </p>
 
                 </div>

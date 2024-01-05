@@ -34,9 +34,12 @@ public class BookingTrackerController {
         return "booking-page";
     }
 
-    @GetMapping("/check-booking")
-    public String checkBooking(@ModelAttribute("bookingId") BookingIdDto bookingId){
-        return "check-booking";
+    @GetMapping(value = {"/check-booking","/update"})
+    public String checkBooking(@ModelAttribute("bookingId") BookingIdDto bookingId, HttpServletRequest request){
+        if(request.getServletPath().equals("/booking/check-booking")) {
+            return "check-booking";
+        }
+        return "update-booking";
     }
 
     @PostMapping("/book")
@@ -63,10 +66,11 @@ public class BookingTrackerController {
 
     }
 
-    @PutMapping("/save-update")
-    public String updateBooking(@ModelAttribute("booking_dto") BookingDto bookingDto, Model model ){
-        BookingDto bookingDto1 = bookingService.updateBooking(bookingDto);
-        model.addAttribute("receipt",bookingDto);
+    @PostMapping("/save-update")
+    public String updateBooking(@ModelAttribute("bookingId") BookingDto bookingDto, Model model ){
+        bookingService.updateBooking(bookingDto);
+        BookingDto bookingDto1 = bookingService.checkBooking(bookingDto.getBookingId());
+                model.addAttribute("receipt",bookingDto1);
         return "bookingdetails";
     }
 
@@ -93,18 +97,19 @@ public class BookingTrackerController {
                                    BookingIdDto bookingId, Model model, HttpServletRequest request){
       BookingDto bookingDto =  bookingService.checkBooking(bookingId.getBookingId());
         model.addAttribute("receipt",bookingDto);
+        List<AvailableSeats> availableSeats = bookingDisplayService.findBooking(
+                bookingDto.getAircraftNumber(),bookingDto.getDepartureTime(),bookingDto.getDate());
+        model.addAttribute("seats", availableSeats);
 
-        return "update-page";
+        if(request.getServletPath().equals("/booking/check-booking")){
+            return "bookingdetails";
+        }
 
-//        if(request.getServletPath().equals("/booking/check-booking")){
-//            return "bookingdetails";
-//        }
-//
-//        if(request.getServletPath().equals("/booking/update")){
-//            return "update-page";
-//        }
-//
-//        return null;
+        if(request.getServletPath().equals("/booking/update")){
+            return "update-page";
+        }
+
+        return null;
     }
 
     @GetMapping("/book")
