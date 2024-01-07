@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @Controller
@@ -30,12 +31,19 @@ public class BookingTrackerController {
     }
 
     @GetMapping
-    public String getFlightSchedule(@ModelAttribute("date") DateDto date){
+    public String getFlightSchedule(@ModelAttribute("date") DateDto date,
+                                    Model model ,@RequestParam("error")Optional<String> errorMsg){
+        String error = errorMsg.orElse("");
+        model.addAttribute("error", error);
         return "booking-page";
     }
 
     @GetMapping(value = {"/check-booking","/update"})
-    public String checkBooking(@ModelAttribute("bookingId") BookingIdDto bookingId, HttpServletRequest request){
+    public String checkBooking(@ModelAttribute("bookingId") BookingIdDto bookingId,
+                               HttpServletRequest request, Model model ,
+                               @RequestParam("error") Optional<String> errorMsg){
+        String error = errorMsg.orElse("");
+        model.addAttribute("error",error);
         if(request.getServletPath().equals("/booking/check-booking")) {
             return "check-booking";
         }
@@ -114,8 +122,10 @@ public class BookingTrackerController {
 
     @GetMapping("/book")
     public String booking(@ModelAttribute("dto") BookingConverterDto dto,
-            @RequestParam("flight_id") int id, Model model, HttpServletRequest request){
-
+            @RequestParam("flight_id") int id, Model model, HttpServletRequest request,
+                          @RequestParam("error") Optional<String> errorMsg){
+            String errorVariable = errorMsg.orElse("");
+            model.addAttribute("error",errorVariable);
         FlightScheduleDto flight = null;
         HttpSession session = request.getSession();
         List<FlightScheduleDto> flightSchedule = (List<FlightScheduleDto>) session.getAttribute("flightSchedule");
@@ -142,6 +152,7 @@ public class BookingTrackerController {
         model.addAttribute("flights",flight);
         model.addAttribute("seats", availableSeats);
         model.addAttribute("flight_id", id);
+        session.setAttribute("currentFlight_id",id);
 
         return "available_seats";
     }

@@ -58,6 +58,11 @@
             cursor: pointer;
         }
 
+        .btn{
+            display: flex;
+            justify-content: center;
+        }
+
         button:hover {
             background-color: #0e2433;
         }
@@ -90,10 +95,10 @@
 <body>
 
 <div id="booking-form">
-<!--    <div class="message error" th:if="${error != null}">[[${error}]]</div>-->
+    <div class="message error" th:if="${!error.empty}">[[${error}]]</div>
 <!--    <div class="message success" th:if="${success != null}">[[${success}]]</div>-->
     <!--    <div class="message error" style="display: none;">Registration failed. Please try again.</div>-->
-    <h2>BooKing</h2>
+    <h2>Select date</h2>
     <form method="post" role="form" th:action="@{/booking/flight_schedule}" th:Object="${date}">
 
         <label for="date">Date</label>

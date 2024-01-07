@@ -5,6 +5,7 @@ import com.uexcel.airlinebookingreservation.dto.BookingConverterDto;
 import com.uexcel.airlinebookingreservation.dto.BookingDto;
 import com.uexcel.airlinebookingreservation.entity.Booking;
 import com.uexcel.airlinebookingreservation.entity.BookingTracker;
+import com.uexcel.airlinebookingreservation.exception.IncorrectDataException;
 import com.uexcel.airlinebookingreservation.repository.BookingRepository;
 import com.uexcel.airlinebookingreservation.repository.BookingTrackerRepository;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,10 @@ public class BookingServiceImp implements BookingService {
     @Override
     public List<BookingDto> saveBooking(BookingConverterDto bookingConverterDto) {
 
+        if(bookingConverterDto.getSeatNumber1() == 0){
+            throw  new IncorrectDataException("Please select a seat");
+        }
+
         dateValidation(bookingConverterDto.getDate1().getYear(), bookingConverterDto.getDate1().getDayOfYear());
 
         if(bookingConverterDto.getAircraftNumber2() != null) {
@@ -43,6 +48,10 @@ public class BookingServiceImp implements BookingService {
         deleteOldBookings(bookingTrackerList, bookingTrackerRepository);
 
         if (bookingConverterDto.getAircraftNumber2() != null && bookingConverterDto.getDate2() != null) {
+
+            if(bookingConverterDto.getSeatNumber2() == 0){
+                throw  new IncorrectDataException("Please select a seat");
+            }
 
             List<BookingTracker> bookingTrackerList2 =
                     bookingTrackerRepository.findByAircraftNumber(bookingConverterDto.getAircraftNumber2());
@@ -96,7 +105,7 @@ public class BookingServiceImp implements BookingService {
 
         }
 
-        throw new RuntimeException("Booking not found");
+        throw new IncorrectDataException("Invalid booking number");
     }
 
     @Override
@@ -106,6 +115,9 @@ public class BookingServiceImp implements BookingService {
                 bookingRepository.findByBookingId(bookingDto.getBookingId());
         BookingTracker bookingTracker =
                 bookingTrackerRepository.findByBookingId(bookingDto.getBookingId());
+        if(bookingDto.getSeatNumber() == 0){
+            throw new IncorrectDataException("Please select seat");
+        }
 
         if (booking != null && bookingTracker != null) {
 
@@ -234,11 +246,15 @@ public class BookingServiceImp implements BookingService {
 
         }
 
-        throw new RuntimeException("Booking not found");
+        throw new IncorrectDataException("Invalid booking number");
     }
 
     @Override
     public BookingDto checkBooking(String id) {
+         Booking booking = bookingRepository.findByBookingId(id);
+         if(booking==null) {
+             throw new IncorrectDataException("Invalid booking number");
+         }
         return convertToDto(bookingRepository.findByBookingId(id));
     }
 
@@ -309,7 +325,7 @@ public class BookingServiceImp implements BookingService {
                     bookingTracker.getYear(), bookingTracker.getDayOfYear(),
                     bookingTracker.getDepartureTime());
             if (newBooking != null) {
-                throw new RuntimeException("The seat number " +booking.getSeatNumber()+ " on aircraft number " +
+                throw new IncorrectDataException("The seat number " +booking.getSeatNumber()+ " on aircraft number " +
                         booking.getAircraftNumber() + " has been booked on this date " + booking.getDate());
             }
 
@@ -324,7 +340,7 @@ public class BookingServiceImp implements BookingService {
                 bookingTracker.getDepartureTime());
 
         if (booking != null) {
-            throw new RuntimeException("The seat on " + bookingConverterDto.getAircraftNumber2()
+            throw new IncorrectDataException("The seat on " + bookingConverterDto.getAircraftNumber2()
                     + " has been booked on this date " + bookingConverterDto.getDate2());
         }
     }
@@ -383,11 +399,11 @@ public class BookingServiceImp implements BookingService {
     private  void dateValidation(int year,  int dayOfYear){
 
         if(year < LocalDate.now().getYear()){
-            throw new RuntimeException("Invalid booking date");
+            throw new IncorrectDataException("Invalid booking date");
         }
 
         if(year == LocalDate.now().getYear() && dayOfYear < LocalDate.now().getDayOfYear()){
-            throw new RuntimeException("Invalid booking date");
+            throw new IncorrectDataException("Invalid booking date");
         }
 
     }

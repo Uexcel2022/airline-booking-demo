@@ -42,15 +42,17 @@
         background-color: #1e2123;
     }
 
-    /*.first{*/
-    /*    display: flex;*/
-    /*    flex-flow: row;*/
-    /*    background: azure;*/
-    /*    justify-items: center;*/
-    /*    justify-content: center;*/
-    /*    width: 500px;*/
+    .error {
+        background-color: #e74c3c;
+    }
 
-    /*}*/
+    .message {
+        margin-top: 15px;
+        padding: 10px;
+        border-radius: 4px;
+        color: #fff;
+        text-align: center;
+    }
     .form{
         background: whitesmoke;
         padding: 24px;
@@ -70,10 +72,15 @@
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        margin-top: 10px;
     }
 
     button:hover {
         background-color: #0e2433;
+    }
+    .btn{
+        display: flex;
+        justify-content: center;
     }
   </style>
 </head>
@@ -84,7 +91,8 @@
 
   <form class="form" method="post" role="form" th:action="@{/booking/book}" th:object="${dto}">
       <fieldset>
-          <h2 class="b"> Seat Number</h2>
+          <div class="message error" th:if="${!error.empty}">[[${error}]]</div>
+          <h3 class="b"> Select seat number</h3>
      <div class="in">
 
       <p th:each="seat:${seats}">
@@ -103,17 +111,18 @@
       </div>
 
           <label for="firstName">First name</label>
-          <p><input th:field="${dto.firstName}" size="50px" id="firstName" name="firstName"></p>
+          <p><input th:field="${dto.firstName}" size="50px" id="firstName" name="firstName" required></p>
           <label for="lastName">Last name </label>
-          <p><input th:field="${dto.lastName}" size="50px" id="lastName" name="lastName"></p>
+          <p><input th:field="${dto.lastName}" size="50px" id="lastName" name="lastName" required></p>
           <label for="NOF">Next of king Number</label>
-          <p><input th:field="${dto.nextOfKingNumber}" size="50px" id="NOF" name="nok" ></p>
+          <p><input th:field="${dto.nextOfKingNumber}" size="50px" id="NOF" name="nok" required></p>
           <label for="email">Email</label>
-          <p><input size="50px" type="email" id="email" name="email"></p>
+          <p><input size="50px" type="email" id="email" name="email" required></p>
           <label for="address">Address</label>
-          <p><input th:field="${dto.address}"  size="50px" id="address" name="address"></p>
-
-       <button type="submit">Submit</button>
+          <p><input th:field="${dto.address}"  size="50px" id="address" name="address" required></p>
+       <div class="btn">
+           <button type="submit">Submit</button>
+       </div>
       </fieldset>
 </form>
 </div>

@@ -3,6 +3,7 @@ package com.uexcel.airlinebookingreservation.service;
 import com.uexcel.airlinebookingreservation.dto.AvailableSeats;
 import com.uexcel.airlinebookingreservation.dto.FlightScheduleDto;
 import com.uexcel.airlinebookingreservation.entity.FlightSchedule;
+import com.uexcel.airlinebookingreservation.exception.IncorrectDataException;
 import com.uexcel.airlinebookingreservation.repository.BookingTrackerRepository;
 import com.uexcel.airlinebookingreservation.repository.FlightScheduleRepository;
 import com.uexcel.airlinebookingreservation.repository.SeatRepository;
@@ -60,11 +61,11 @@ public class BookingDisplayServiceImp implements  BookingDisplayService{
     @Override
     public List<FlightScheduleDto> getFlightSchedule(LocalDate date) {
         if(date.getYear() < LocalDate.now().getYear()){
-            throw new RuntimeException("Past date is invalid");
+            throw new IncorrectDataException("Past date is invalid");
         }
 
         if(date.getYear() == LocalDate.now().getYear() && date.getDayOfYear() < LocalDate.now().getDayOfYear()){
-            throw new RuntimeException("Past date is invalid");
+            throw new IncorrectDataException("Past date is invalid");
         }
         List<FlightScheduleDto> flightScheduleDtoArrayList = new ArrayList<>();
 
